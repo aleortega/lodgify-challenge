@@ -28,7 +28,7 @@ namespace VacationRental.Application.Services
             var rentalBookings = await this._bookingRepository.ListBookingsFromRental(rentalId);
 
             var calendar = CalendarBuilder
-                .Get(rentalId)
+                .Get(rental)
                 .From(start)
                 .For(nights)
                 .With(rentalBookings)

@@ -6,6 +6,7 @@ namespace VacationRental.Core.Entities
     {
         public int Id { get; set; }
         public int RentalId { get; set; }
+        public int Unit { get; set; }
         public DateTime Start
         {
             get => _startIgnoreTime;

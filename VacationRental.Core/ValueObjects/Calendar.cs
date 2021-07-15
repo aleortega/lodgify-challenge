@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using VacationRental.Core.Entities;
+using VacationRental.Core.Extensions;
 using VacationRental.Core.ValueObjects.Builders;
 
 namespace VacationRental.Core.ValueObjects
 {
     public class Calendar: ICalendarInitializer, ICalendarDelimiter, ICalendarPopulator, ICalendarBuilder, ICalendarBuilt
     {
-        public int RentalId { get; set; }
+        public Rental Rental { get; set; }
         public List<CalendarDate> BookingDates { get; set; }
         private DateTime _startDate { get; set; }
         private int _nights { get; set; }
         private List<Booking> _bookings { get; set; }
 
-        internal Calendar(int rentalId)
+        internal Calendar(Rental rental)
         {
-            this.RentalId = rentalId;
+            this.Rental = rental;
             BookingDates = new List<CalendarDate>();
         }
 
@@ -52,7 +53,9 @@ namespace VacationRental.Core.ValueObjects
                 this._bookings.ForEach(booking =>
                 {
                     if (booking.Start <= date.Date && booking.CheckOut > date.Date)
-                        date.AddBooking(booking.Id);
+                        date.AddBooking(booking.Id, booking.Unit);
+                    if (booking.CheckOut == date.Date || date.Date.IsBetween(booking.CheckOut, booking.CheckOut.AddDays(this.Rental.PreparationTimeInDays))) //|| date.Date booking.CheckOut.AddDays(this.Rental.PreparationTimeInDays))
+                        date.AddPreparationTime(booking.Unit);
                 });
 
                 this.AddDateWithBookings(date);
@@ -66,26 +69,45 @@ namespace VacationRental.Core.ValueObjects
     {
         public DateTime Date { get; set; }
         public List<CalendarBooking> Bookings { get; set; }
+        public List<CalendarPreparationTime> PreparationTimes { get; set; }
 
         public CalendarDate(DateTime date)
         {
             this.Date = date;
             this.Bookings = new List<CalendarBooking>();
+            this.PreparationTimes = new List<CalendarPreparationTime>();
         }
 
-        public void AddBooking(int booking)
+        public void AddBooking(int booking, int unit)
         {
-            this.Bookings.Add(new CalendarBooking(booking));
+            this.Bookings.Add(new CalendarBooking(booking, unit));
+        }
+
+        public void AddPreparationTime(int unit)
+        {
+            this.PreparationTimes.Add(new CalendarPreparationTime(unit));
         }
     }
 
     public class CalendarBooking
     {
         public int Booking { get; set; }
+        public int Unit { get; set; }
 
-        public CalendarBooking(int booking)
+        public CalendarBooking(int booking, int unit)
         {
             this.Booking = booking;
+            this.Unit = unit;
+        }
+    }
+
+    public class CalendarPreparationTime
+    {
+        public int Unit { get; set; }
+
+        public CalendarPreparationTime(int unit)
+        {
+            this.Unit = unit;
         }
     }
 }

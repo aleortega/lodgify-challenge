@@ -6,9 +6,9 @@ namespace VacationRental.Core.ValueObjects.Builders
 {
     public static class CalendarBuilder
     {
-        public static ICalendarInitializer Get(int rentalId)
+        public static ICalendarInitializer Get(Rental rental)
         {
-            return new Calendar(rentalId);
+            return new Calendar(rental);
         }
     }
 
@@ -34,7 +34,7 @@ namespace VacationRental.Core.ValueObjects.Builders
 
     public interface ICalendarBuilt
     {
-        int RentalId { get; set; }
+        Rental Rental { get; set; }
         List<CalendarDate> BookingDates { get; set; }
     }
 }

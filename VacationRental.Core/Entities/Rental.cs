@@ -6,31 +6,37 @@ namespace VacationRental.Core.Entities
     {
         public int Id { get; set; }
         public int Units { get; set; }
+        public int PreparationTimeInDays { get; set; }
 
-        public bool IsAvailable(Booking bookingAttempt, IEnumerable<Booking> registeredBookings)
+        private HashSet<int> GetUnitsToBook()
         {
-            bool result = true;
-            for (var i = 0; i < bookingAttempt.Nights; i++)
+            HashSet<int> unitsToBook = new HashSet<int>();
+            for (var unit = 0; unit < this.Units; unit++)
+                unitsToBook.Add(unit + 1);
+
+            return unitsToBook;
+        }
+
+        public int GetAvailableUnit(Booking bookingAttempt, IEnumerable<Booking> registeredBookings)
+        {
+            var availableUnits = this.GetUnitsToBook();
+            var currentNight = 1;
+
+            while (availableUnits.Count > 0 && currentNight <= bookingAttempt.Nights)
             {
-                var count = 0;
                 foreach (var booking in registeredBookings)
                 {
-                    if ((booking.Start <= bookingAttempt.Start.Date && booking.CheckOut > bookingAttempt.Start.Date)
-                        || (booking.Start < bookingAttempt.CheckOut && booking.CheckOut >= bookingAttempt.CheckOut)
-                        || (booking.Start > bookingAttempt.Start && booking.CheckOut < bookingAttempt.CheckOut))
+                    if ((booking.Start <= bookingAttempt.Start.Date && booking.CheckOut.AddDays(this.PreparationTimeInDays) > bookingAttempt.Start.Date)
+                        || (booking.Start < bookingAttempt.CheckOut && booking.CheckOut.AddDays(this.PreparationTimeInDays) >= bookingAttempt.CheckOut)
+                        || (booking.Start > bookingAttempt.Start && booking.CheckOut.AddDays(this.PreparationTimeInDays) < bookingAttempt.CheckOut))
                     {
-                        count++;
+                        availableUnits.Remove(booking.Unit);
                     }
                 }
-
-                if (count >= this.Units)
-                {
-                    result = false;
-                    break;
-                }
+                currentNight++;
             }
 
-            return result;
+            return availableUnits.Count;
         }
     }
 }

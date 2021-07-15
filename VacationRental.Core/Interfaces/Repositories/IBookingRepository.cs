@@ -8,7 +8,6 @@ namespace VacationRental.Core.Interfaces.Repositories
     {
         Task<Booking> GetAsync(int id);
         Task<IEnumerable<Booking>> ListBookingsFromRental(int rentalId);
-
         Task<int> SaveAsync(Booking booking);
     }
 }

@@ -33,11 +33,14 @@ namespace VacationRental.Application.Mapper
             CreateMap<CalendarBookingViewModel, CalendarBooking>()
                 .ForMember(dest => dest.Booking, opt => opt.MapFrom(src => src.Id))
                 .ReverseMap();
+            CreateMap<CalendarPreparationTimeViewModel, CalendarPreparationTime>()
+                .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.Unit))
+                .ReverseMap();
             CreateMap<CalendarDateViewModel, CalendarDate>()
                 .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date))
                 .ReverseMap();
             CreateMap<CalendarViewModel, Calendar>()
-                .ForMember(dest => dest.RentalId, opt => opt.MapFrom(src => src.RentalId))
+                .ForPath(dest => dest.Rental.Id, opt => opt.MapFrom(src => src.RentalId))
                 .ForMember(dest => dest.BookingDates, opt => opt.MapFrom(src => src.Dates))
                 .ReverseMap();
         }

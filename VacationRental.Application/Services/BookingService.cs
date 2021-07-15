@@ -34,9 +34,12 @@ namespace VacationRental.Application.Services
 
             var registeredBookings = await this._bookingRepository.ListBookingsFromRental(bookingAttemptModel.RentalId);
             var bookingAttempt = ObjectMapper.Mapper.Map<Booking>(bookingAttemptModel);
+            var unitAvailable = rentalToBeBooked.GetAvailableUnit(bookingAttempt, registeredBookings);
 
-            if (!rentalToBeBooked.IsAvailable(bookingAttempt, registeredBookings))
+            if (unitAvailable == 0)
                 throw new ApplicationException("Not available");
+
+            bookingAttempt.Unit = unitAvailable;
 
             var result = await this._bookingRepository.SaveAsync(bookingAttempt);
             return new ResourceIdViewModel() { Id = result };

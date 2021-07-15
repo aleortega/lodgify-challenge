@@ -19,7 +19,7 @@ namespace VacationRental.Persistance.InMemory
             this._rentals = rentals;
         }
 
-        public async Task<Rental> GetAsync(int id) => await Task.Run(() => this._rentals[id]);
+        public async Task<Rental> GetAsync(int id) => await Task.Run(() => this._rentals.ContainsKey(id) ? this._rentals[id] : null);
 
         /// <summary>
         /// Since this id assignment is bussines agnostic (we only need this when working with InMemory data), I don't consider it a business logic operation
