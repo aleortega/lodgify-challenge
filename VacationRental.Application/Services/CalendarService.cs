@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using VacationRental.Application.Mapper;
+using VacationRental.Application.Extensions;
 using VacationRental.Application.Models;
 using VacationRental.Application.Services.Interfaces;
 using VacationRental.Core.Interfaces.Repositories;
@@ -27,14 +27,13 @@ namespace VacationRental.Application.Services
 
             var rentalBookings = await this._bookingRepository.ListBookingsFromRental(rentalId);
 
-            var calendar = CalendarBuilder
+            var calendarModel = CalendarBuilder
                 .Get(rental)
                 .From(start)
                 .For(nights)
                 .With(rentalBookings)
-                .Build();
-
-            var calendarModel = ObjectMapper.Mapper.Map<CalendarViewModel>(calendar);
+                .Build()
+                .AsModel();
 
             return calendarModel;
         }

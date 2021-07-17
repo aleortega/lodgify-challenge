@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
-using VacationRental.Application.Mapper;
+using VacationRental.Application.Extensions;
 using VacationRental.Application.Models;
 using VacationRental.Application.Services.Interfaces;
-using VacationRental.Core.Entities;
 using VacationRental.Core.Interfaces.Repositories;
 
 namespace VacationRental.Application.Services
@@ -19,13 +18,13 @@ namespace VacationRental.Application.Services
         public async Task<RentalViewModel> GetRentalAsync(int rentalId)
         {
             var rental = await this._rentalRepository.GetAsync(rentalId);
-            var rentalMapped = ObjectMapper.Mapper.Map<RentalViewModel>(rental);
+            var rentalMapped = rental.AsModel();
             return rentalMapped;
         }
 
         public async Task<ResourceIdViewModel> SaveRentalAsync(RentalBindingModel rentalModel)
         {
-            var rentalMapped = ObjectMapper.Mapper.Map<Rental>(rentalModel);
+            var rentalMapped = rentalModel.AsEntity(); //ObjectMapper.Mapper.Map<Rental>(rentalModel);
             var result = await this._rentalRepository.SaveAsync(rentalMapped);
             return new ResourceIdViewModel() { Id = result };
         }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using VacationRental.Application.Mapper;
+using VacationRental.Application.Extensions;
 using VacationRental.Application.Models;
 using VacationRental.Application.Services.Interfaces;
-using VacationRental.Core.Entities;
 using VacationRental.Core.Interfaces.Repositories;
 
 namespace VacationRental.Application.Services
@@ -22,7 +21,7 @@ namespace VacationRental.Application.Services
         public async Task<BookingViewModel> GetBookingAsync(int bookingId)
         {
             var booking = await this._bookingRepository.GetAsync(bookingId);
-            var bookingMapped = ObjectMapper.Mapper.Map<BookingViewModel>(booking);
+            var bookingMapped = booking.AsModel();
             return bookingMapped;
         }
 
@@ -33,13 +32,9 @@ namespace VacationRental.Application.Services
                 throw new ApplicationException("Rental not found");
 
             var registeredBookings = await this._bookingRepository.ListBookingsFromRental(bookingAttemptModel.RentalId);
-            var bookingAttempt = ObjectMapper.Mapper.Map<Booking>(bookingAttemptModel);
+            var bookingAttempt = bookingAttemptModel.AsEntity();
             var unitAvailable = rentalToBeBooked.GetAvailableUnit(bookingAttempt, registeredBookings);
-
-            if (unitAvailable == 0)
-                throw new ApplicationException("Not available");
-
-            bookingAttempt.Unit = unitAvailable;
+            bookingAttempt.AssignUnitToOccupy(unitAvailable);
 
             var result = await this._bookingRepository.SaveAsync(bookingAttempt);
             return new ResourceIdViewModel() { Id = result };

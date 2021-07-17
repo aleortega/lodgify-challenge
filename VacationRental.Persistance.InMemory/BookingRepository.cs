@@ -15,9 +15,11 @@ namespace VacationRental.Persistance.InMemory
             this._bookings = bookings;
         }
 
-        public async Task<Booking> GetAsync(int id) => await Task.Run(() => this._bookings[id]);
+        public async Task<Booking> GetAsync(int id) => 
+            await Task.Run(() => this._bookings[id]);
 
-        public async Task<IEnumerable<Booking>> ListBookingsFromRental(int rentalId) => await Task.Run(() => this._bookings.Values.Where(booking => booking.RentalId == rentalId));
+        public async Task<IEnumerable<Booking>> ListBookingsFromRental(int rentalId) =>
+            await Task.Run(() => this._bookings.Values.Where(booking => booking.RentalId == rentalId));
 
         public async Task<int> SaveAsync(Booking booking)
         {
