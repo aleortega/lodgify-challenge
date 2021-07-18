@@ -18,7 +18,7 @@ namespace VacationRental.Persistance.InMemory
         public async Task<Reservation> GetAsync(int id) => 
             await Task.Run(() => this._reservations[id]);
 
-        public async Task<IEnumerable<Reservation>> ListBookingsFromRental(int rentalId) =>
+        public async Task<IEnumerable<Reservation>> ListReservationsFromRental(int rentalId) =>
             await Task.Run(() => this._reservations.Values.Where(reservation => reservation.RentalId == rentalId));
 
         private int GetNewId() => this._reservations.Keys.Count + 1;

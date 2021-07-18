@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using VacationRental.Core.Interfaces;
+﻿using System;
+using System.Collections.Generic;
 
 namespace VacationRental.Core.Entities
 {
@@ -8,6 +8,13 @@ namespace VacationRental.Core.Entities
         public int Id { get; set; }
         public int Units { get; set; }
         public int PreparationTimeInDays { get; set; }
+        private IEnumerable<Reservation> _priorReservations;
+
+        public Rental LoadPriorReservations(IEnumerable<Reservation> priorReservations)
+        {
+            this._priorReservations = priorReservations;
+            return this;
+        }
 
         private HashSet<int> GetUnitsToBook()
         {
@@ -18,14 +25,17 @@ namespace VacationRental.Core.Entities
             return unitsToBook;
         }
 
-        public int SearchForAvailableUnit(Booking bookingAttempt, IEnumerable<Reservation> registeredReservations)
+        public int SearchForAvailableUnit(Booking bookingAttempt)
         {
+            if (this._priorReservations == null)
+                throw new ApplicationException("It is needed to load prior rental's reservations before looking for an empty unit");
+
             var availableUnits = this.GetUnitsToBook();
             var currentNight = 1;
 
             while (availableUnits.Count > 0 && currentNight <= bookingAttempt.Nights)
             {
-                foreach (var reservation in registeredReservations)
+                foreach (var reservation in this._priorReservations)
                 {
                     if (reservation.ConflictsWith(bookingAttempt))
                         availableUnits.Remove(reservation.Unit);

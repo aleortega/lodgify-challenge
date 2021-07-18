@@ -32,14 +32,18 @@ namespace VacationRental.Application.Services
             if (rentalToBeBooked == null) 
                 throw new ApplicationException("Rental not found");
 
-            var registeredBookings = await this._reservationRepository.ListBookingsFromRental(bookingAttemptModel.RentalId);
+            var registeredBookings = await this._reservationRepository.ListReservationsFromRental(bookingAttemptModel.RentalId);
             var bookingAttempt = bookingAttemptModel.AsEntity();
-            var unitAvailable = rentalToBeBooked.SearchForAvailableUnit(bookingAttempt, registeredBookings);
+
+            var unitAvailable = rentalToBeBooked
+                .LoadPriorReservations(registeredBookings)
+                .SearchForAvailableUnit(bookingAttempt);
             bookingAttempt.AssignUnitToOccupy(unitAvailable);
             var preparationTimes = rentalToBeBooked.CalculatePreparationTimesFrom(bookingAttempt);
-            await this._reservationRepository.SaveAsync(preparationTimes);
 
             var result = await this._reservationRepository.SaveAsync(bookingAttempt);
+            await this._reservationRepository.SaveAsync(preparationTimes);
+
             return new ResourceIdViewModel() { Id = result };
         }
     }

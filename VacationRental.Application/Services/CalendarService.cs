@@ -25,7 +25,7 @@ namespace VacationRental.Application.Services
             if (rental == null)
                 throw new ApplicationException("Rental not found");
 
-            var rentalBookings = await this._reservationRepository.ListBookingsFromRental(rentalId);
+            var rentalBookings = await this._reservationRepository.ListReservationsFromRental(rentalId);
 
             var calendarModel = CalendarBuilder
                 .Get(rental)

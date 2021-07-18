@@ -7,7 +7,7 @@ namespace VacationRental.Persistance.InMemory
 {
     /// <summary>
     /// To scalability and beyond:
-    /// Even when this class does not require Async operations, I developed it that way so when we want to switch to another
+    /// Even when these classes do not require Async operations, I developed them that way so when we want to switch to another
     /// persistance engine (let's say Sql or MongoDB) we could keep using the same interface.
     /// </summary>
     public class RentalRepository : IRentalRepository
