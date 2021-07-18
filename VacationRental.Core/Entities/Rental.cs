@@ -18,21 +18,17 @@ namespace VacationRental.Core.Entities
             return unitsToBook;
         }
 
-        public int SearchForAvailableUnit(Booking bookingAttempt, IEnumerable<IReservation> registeredBookings)
+        public int SearchForAvailableUnit(Booking bookingAttempt, IEnumerable<IReservation> registeredReservations)
         {
             var availableUnits = this.GetUnitsToBook();
             var currentNight = 1;
 
             while (availableUnits.Count > 0 && currentNight <= bookingAttempt.Nights)
             {
-                foreach (var booking in registeredBookings)
+                foreach (var reservation in registeredReservations)
                 {
-                    if ((booking.Start <= bookingAttempt.Start.Date && booking.CheckOut.AddDays(this.PreparationTimeInDays) > bookingAttempt.Start.Date)
-                        || (booking.Start < bookingAttempt.CheckOut && booking.CheckOut.AddDays(this.PreparationTimeInDays) >= bookingAttempt.CheckOut)
-                        || (booking.Start > bookingAttempt.Start && booking.CheckOut.AddDays(this.PreparationTimeInDays) < bookingAttempt.CheckOut))
-                    {
-                        availableUnits.Remove(booking.Unit);
-                    }
+                    if (reservation.Start < bookingAttempt.CheckOut && reservation.CheckOut > bookingAttempt.Start)
+                        availableUnits.Remove(reservation.Unit);
                 }
                 currentNight++;
             }
