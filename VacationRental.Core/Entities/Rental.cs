@@ -27,7 +27,7 @@ namespace VacationRental.Core.Entities
             {
                 foreach (var reservation in registeredReservations)
                 {
-                    if (reservation.Start < bookingAttempt.CheckOut && reservation.CheckOut > bookingAttempt.Start)
+                    if (bookingAttempt.ConflictsWith(reservation))
                         availableUnits.Remove(reservation.Unit);
                 }
                 currentNight++;

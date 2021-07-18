@@ -28,6 +28,8 @@ namespace VacationRental.Core.Entities
             this.Unit = unitToOccupy;
         }
 
+        public bool ConflictsWith(IReservation reservation) => (reservation.Start < this.CheckOut && reservation.CheckOut > this.Start);
+
         public bool OccursOn(DateTime date) => (date.Date >= this.Start && date.Date < this.CheckOut);
     }
 }
