@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VacationRental.Core.Interfaces;
 
 namespace VacationRental.Core.Entities
 {
@@ -17,7 +18,7 @@ namespace VacationRental.Core.Entities
             return unitsToBook;
         }
 
-        public int GetAvailableUnit(Booking bookingAttempt, IEnumerable<Booking> registeredBookings)
+        public int SearchForAvailableUnit(Booking bookingAttempt, IEnumerable<IReservation> registeredBookings)
         {
             var availableUnits = this.GetUnitsToBook();
             var currentNight = 1;
@@ -37,6 +38,18 @@ namespace VacationRental.Core.Entities
             }
 
             return availableUnits.Count;
+        }
+
+        public List<IReservation> CalculatePreparationTimesFrom(Booking booking)
+        {
+            var preparationTimes = new List<IReservation>();
+            while(preparationTimes.Count < this.PreparationTimeInDays)
+            {
+                var preparationTimeStartDate = booking.CheckOut;
+                preparationTimes.Add(new PreparationTime(this.Id, booking.Unit, preparationTimeStartDate.AddDays(preparationTimes.Count)));
+            }
+
+            return preparationTimes;
         }
     }
 }

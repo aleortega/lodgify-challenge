@@ -10,12 +10,12 @@ namespace VacationRental.Application.Services
 {
     public class CalendarService : ICalendarService
     {
-        private readonly IBookingRepository _bookingRepository;
+        private readonly IReservationRepository _reservationRepository;
         private readonly IRentalRepository _rentalRepository;
 
-        public CalendarService(IBookingRepository bookingRepository, IRentalRepository rentalRepository)
+        public CalendarService(IReservationRepository reservationRepository, IRentalRepository rentalRepository)
         {
-            this._bookingRepository = bookingRepository;
+            this._reservationRepository = reservationRepository;
             this._rentalRepository = rentalRepository;
         }
 
@@ -25,7 +25,7 @@ namespace VacationRental.Application.Services
             if (rental == null)
                 throw new ApplicationException("Rental not found");
 
-            var rentalBookings = await this._bookingRepository.ListBookingsFromRental(rentalId);
+            var rentalBookings = await this._reservationRepository.ListBookingsFromRental(rentalId);
 
             var calendarModel = CalendarBuilder
                 .Get(rental)

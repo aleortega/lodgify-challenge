@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using VacationRental.Core.Entities;
+using VacationRental.Core.Interfaces;
 
 namespace VacationRental.Core.ValueObjects.Builders
 {
@@ -24,7 +25,7 @@ namespace VacationRental.Core.ValueObjects.Builders
 
     public interface ICalendarPopulator
     {
-        ICalendarBuilder With(IEnumerable<Booking> bookings);
+        ICalendarBuilder With(IEnumerable<IReservation> reservation);
     }
 
     public interface ICalendarBuilder

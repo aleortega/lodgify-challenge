@@ -3,25 +3,26 @@ using System.Threading.Tasks;
 using VacationRental.Application.Extensions;
 using VacationRental.Application.Models;
 using VacationRental.Application.Services.Interfaces;
+using VacationRental.Core.Entities;
 using VacationRental.Core.Interfaces.Repositories;
 
 namespace VacationRental.Application.Services
 {
     public class BookingService : IBookingService
     {
-        private readonly IBookingRepository _bookingRepository;
+        private readonly IReservationRepository _reservationRepository;
         private readonly IRentalRepository _rentalRepository;
 
-        public BookingService(IBookingRepository bookingRepository, IRentalRepository rentalRepository)
+        public BookingService(IReservationRepository reservationRepository, IRentalRepository rentalRepository)
         {
-            this._bookingRepository = bookingRepository;
+            this._reservationRepository = reservationRepository;
             this._rentalRepository = rentalRepository;
         }
 
         public async Task<BookingViewModel> GetBookingAsync(int bookingId)
         {
-            var booking = await this._bookingRepository.GetAsync(bookingId);
-            var bookingMapped = booking.AsModel();
+            var booking = await this._reservationRepository.GetAsync(bookingId);
+            var bookingMapped = (booking as Booking).AsModel();
             return bookingMapped;
         }
 
@@ -31,12 +32,14 @@ namespace VacationRental.Application.Services
             if (rentalToBeBooked == null) 
                 throw new ApplicationException("Rental not found");
 
-            var registeredBookings = await this._bookingRepository.ListBookingsFromRental(bookingAttemptModel.RentalId);
+            var registeredBookings = await this._reservationRepository.ListBookingsFromRental(bookingAttemptModel.RentalId);
             var bookingAttempt = bookingAttemptModel.AsEntity();
-            var unitAvailable = rentalToBeBooked.GetAvailableUnit(bookingAttempt, registeredBookings);
+            var unitAvailable = rentalToBeBooked.SearchForAvailableUnit(bookingAttempt, registeredBookings);
             bookingAttempt.AssignUnitToOccupy(unitAvailable);
+            var preparationTimes = rentalToBeBooked.CalculatePreparationTimesFrom(bookingAttempt);
+            await this._reservationRepository.SaveAsync(preparationTimes);
 
-            var result = await this._bookingRepository.SaveAsync(bookingAttempt);
+            var result = await this._reservationRepository.SaveAsync(bookingAttempt);
             return new ResourceIdViewModel() { Id = result };
         }
     }

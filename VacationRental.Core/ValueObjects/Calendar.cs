@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VacationRental.Core.Entities;
-using VacationRental.Core.Extensions;
+using VacationRental.Core.Interfaces;
 using VacationRental.Core.ValueObjects.Builders;
 
 namespace VacationRental.Core.ValueObjects
@@ -13,12 +13,12 @@ namespace VacationRental.Core.ValueObjects
         public List<CalendarDate> BookingDates { get; set; }
         private DateTime _startDate { get; set; }
         private int _nights { get; set; }
-        private List<Booking> _bookings { get; set; }
+        private List<IReservation> _reservations { get; set; }
 
         internal Calendar(Rental rental)
         {
             this.Rental = rental;
-            BookingDates = new List<CalendarDate>();
+            this.BookingDates = new List<CalendarDate>();
         }
 
         public ICalendarDelimiter From(DateTime start)
@@ -33,9 +33,9 @@ namespace VacationRental.Core.ValueObjects
             return this;
         }
 
-        public ICalendarBuilder With(IEnumerable<Booking> bookings)
+        public ICalendarBuilder With(IEnumerable<IReservation> reservations)
         {
-            this._bookings = bookings.ToList();
+            this._reservations = reservations.ToList();
             return this;
         }
         
@@ -50,12 +50,10 @@ namespace VacationRental.Core.ValueObjects
             {
                 var date = new CalendarDate(this._startDate.AddDays(currentNight));
 
-                this._bookings.ForEach(booking =>
+                this._reservations.ForEach(reservation =>
                 {
-                    if (booking.Start <= date.Date && booking.CheckOut > date.Date)
-                        date.AddBooking(booking.Id, booking.Unit);
-                    if (booking.CheckOut == date.Date || date.Date.IsBetween(booking.CheckOut, booking.CheckOut.AddDays(this.Rental.PreparationTimeInDays))) //|| date.Date booking.CheckOut.AddDays(this.Rental.PreparationTimeInDays))
-                        date.AddPreparationTime(booking.Unit);
+                    if (reservation.OccursOn(date.Date))
+                        date.AddReservation(reservation);
                 });
 
                 this.AddDateWithBookings(date);
@@ -70,22 +68,23 @@ namespace VacationRental.Core.ValueObjects
         public DateTime Date { get; set; }
         public List<CalendarBooking> Bookings { get; set; }
         public List<CalendarPreparationTime> PreparationTimes { get; set; }
+        private Dictionary<ReservationType, Action<IReservation>> _reservationAdder { get; }
 
         public CalendarDate(DateTime date)
         {
             this.Date = date;
             this.Bookings = new List<CalendarBooking>();
             this.PreparationTimes = new List<CalendarPreparationTime>();
+            this._reservationAdder = new Dictionary<ReservationType, Action<IReservation>>()
+            {
+                { ReservationType.Booking, (IReservation reservation) => this.Bookings.Add(new CalendarBooking(reservation.Id, reservation.Unit)) },
+                { ReservationType.PreparationTime, (IReservation reservation) => this.PreparationTimes.Add(new CalendarPreparationTime(reservation.Unit)) }
+            };
         }
 
-        public void AddBooking(int booking, int unit)
+        public void AddReservation(IReservation reservation)
         {
-            this.Bookings.Add(new CalendarBooking(booking, unit));
-        }
-
-        public void AddPreparationTime(int unit)
-        {
-            this.PreparationTimes.Add(new CalendarPreparationTime(unit));
+            this._reservationAdder[reservation.Type](reservation);
         }
     }
 

@@ -24,7 +24,7 @@ namespace VacationRental.Application.Services
 
         public async Task<ResourceIdViewModel> SaveRentalAsync(RentalBindingModel rentalModel)
         {
-            var rentalMapped = rentalModel.AsEntity(); //ObjectMapper.Mapper.Map<Rental>(rentalModel);
+            var rentalMapped = rentalModel.AsEntity();
             var result = await this._rentalRepository.SaveAsync(rentalMapped);
             return new ResourceIdViewModel() { Id = result };
         }
