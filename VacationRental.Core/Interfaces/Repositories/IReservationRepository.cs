@@ -9,6 +9,7 @@ namespace VacationRental.Core.Interfaces.Repositories
         Task<Reservation> GetAsync(int id);
         Task<IEnumerable<Reservation>> ListReservationsFromRental(int rentalId);
         Task<int> SaveAsync(Reservation reservation);
-        Task SaveAsync(List<Reservation> reservations);
+        Task<int[]> SaveAsync(List<Reservation> reservations);
+        Task<int[]> ReplaceRentalReservations(int rentalId, List<Reservation> newReservations);
     }
 }

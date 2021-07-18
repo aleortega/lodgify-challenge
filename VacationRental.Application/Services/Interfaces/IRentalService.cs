@@ -7,5 +7,6 @@ namespace VacationRental.Application.Services.Interfaces
     {
         Task<RentalViewModel> GetRentalAsync(int rentalId);
         Task<ResourceIdViewModel> SaveRentalAsync(RentalBindingModel rentalModel);
+        Task<RentalViewModel> UpdateRentalSchedule(int rentalId, RentalBindingModel newRentalSchedule);
     }
 }

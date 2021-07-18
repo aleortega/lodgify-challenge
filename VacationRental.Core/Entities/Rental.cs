@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VacationRental.Core.Entities
 {
@@ -56,6 +57,35 @@ namespace VacationRental.Core.Entities
             }
 
             return preparationTimes;
+        }
+
+        public List<Reservation> AttempToModifySchedule(int? units, int? preparationTimeInDays)
+        {
+            if (this._priorReservations == null)
+                throw new ApplicationException("It is needed to load prior rental's reservations before attempting to update rental schedule");
+            this.Units = units ?? this.Units;
+            this.PreparationTimeInDays = preparationTimeInDays ?? this.PreparationTimeInDays;
+
+            var oldReservations = this._priorReservations;
+
+            var updatedReservations = new List<Reservation>();
+
+            oldReservations
+                .Where(reservation => reservation.Type == ReservationType.Booking)
+                .ToList()
+                .ForEach(bookingReservation =>
+                {
+                    this._priorReservations = updatedReservations;
+                    var reservationAsBooking = (bookingReservation as Booking);
+                    var unitToAssign = this.SearchForAvailableUnit(reservationAsBooking);
+                    reservationAsBooking.AssignUnitToOccupy(unitToAssign);
+                    var preparationTimesReservations = this.CalculatePreparationTimesFrom(reservationAsBooking);
+
+                    updatedReservations.Add(reservationAsBooking);
+                    updatedReservations.AddRange(preparationTimesReservations);
+                });
+
+            return updatedReservations;
         }
     }
 }

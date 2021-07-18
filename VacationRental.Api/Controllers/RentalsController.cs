@@ -30,5 +30,13 @@ namespace VacationRental.Api.Controllers
             var rentalAddedId = await this._service.SaveRentalAsync(model);
             return Ok(rentalAddedId);
         }
+
+        [HttpPut]
+        [Route("{rentalId:int}")]
+        public async Task<IActionResult> Put([FromRoute] int rentalId, [FromBody] RentalBindingModel newRentalSchedule)
+        {
+            var rentalModified = await this._service.UpdateRentalSchedule(rentalId, newRentalSchedule);
+            return Ok(rentalModified);
+        }
     }
 }

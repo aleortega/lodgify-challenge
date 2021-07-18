@@ -14,9 +14,9 @@ namespace VacationRental.Persistance.InMemory
     {
         private readonly IDictionary<int, Rental> _rentals;
 
-        public RentalRepository(IDictionary<int, Rental> rentals)
+        public RentalRepository()
         {
-            this._rentals = rentals;
+            this._rentals = new Dictionary<int, Rental>();
         }
 
         public async Task<Rental> GetAsync(int id) => await Task.Run(() => this._rentals.ContainsKey(id) ? this._rentals[id] : null);
@@ -31,6 +31,12 @@ namespace VacationRental.Persistance.InMemory
             this._rentals.Add(rental.Id, rental);
 
             return await Task.Run(() => rental.Id);
+        }
+
+        public async Task<Rental> Update(int id, Rental rental)
+        {
+            this._rentals[id] = rental;
+            return await Task.Run(() => this._rentals[id]);
         }
     }
 }

@@ -8,14 +8,14 @@ namespace VacationRental.Persistance.InMemory
 {
     public class ReservationRepository : IReservationRepository
     {
-        private readonly IDictionary<int, Reservation> _reservations;
+        private IDictionary<int, Reservation> _reservations { get; set; }
 
-        public ReservationRepository(IDictionary<int, Reservation> reservations)
+        public ReservationRepository()
         {
-            this._reservations = reservations;
+            this._reservations = new Dictionary<int, Reservation>();
         }
 
-        public async Task<Reservation> GetAsync(int id) => 
+        public async Task<Reservation> GetAsync(int id) =>
             await Task.Run(() => this._reservations[id]);
 
         public async Task<IEnumerable<Reservation>> ListReservationsFromRental(int rentalId) =>
@@ -31,13 +31,24 @@ namespace VacationRental.Persistance.InMemory
             return await Task.Run(() => reservation.Id);
         }
 
-        public async Task SaveAsync(List<Reservation> reservations)
+        public async Task<int[]> SaveAsync(List<Reservation> reservations)
         {
-            await Task.Run(() => reservations.ForEach(reservation =>
+            List<Task<int>> saveOperations = new List<Task<int>>();
+            foreach (var reservation in reservations)
             {
-                reservation.Id = this.GetNewId();
-                this._reservations.Add(reservation.Id, reservation);
-            }));
+                var saveOperation = this.SaveAsync(reservation);
+                saveOperations.Add(saveOperation);
+            }
+            return await Task.WhenAll(saveOperations);
+        }
+
+        public async Task<int[]> ReplaceRentalReservations(int rentalId, List<Reservation> newReservations)
+        {
+            var dictWithUpdatedReservations = this._reservations
+                .Where(keyValuePair => keyValuePair.Value.RentalId != rentalId)
+                .ToDictionary(keyValuePair => keyValuePair.Key, keyValuePair => keyValuePair.Value);
+            this._reservations = dictWithUpdatedReservations;
+            return await this.SaveAsync(newReservations);
         }
     }
 }
