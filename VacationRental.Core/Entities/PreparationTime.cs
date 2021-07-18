@@ -3,20 +3,11 @@ using VacationRental.Core.Interfaces;
 
 namespace VacationRental.Core.Entities
 {
-    public class PreparationTime : IReservation
+    public class PreparationTime : Reservation
     {
-        public int Id { get; set; }
-        public int RentalId { get; private set; }
-        public int Unit { get; }
-        public DateTime CheckOut => this.Start.AddDays(1);
-        public DateTime Start
-        {
-            get => _startIgnoreTime;
-            set => _startIgnoreTime = value.Date;
-        }
-        public ReservationType Type => ReservationType.PreparationTime;
+        public override DateTime CheckOut => this.Start.AddDays(1);
 
-        private DateTime _startIgnoreTime;
+        public override ReservationType Type => ReservationType.PreparationTime;
 
         public PreparationTime(int rentalId, int unit, DateTime startDate)
         {
@@ -25,6 +16,6 @@ namespace VacationRental.Core.Entities
             this.Start = startDate;
         }
 
-        public bool OccursOn(DateTime date) => this.Start == date.Date;
+        public override bool OccursOn(DateTime date) => (this.Start == date.Date);
     }
 }

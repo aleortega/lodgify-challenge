@@ -18,7 +18,7 @@ namespace VacationRental.Core.Entities
             return unitsToBook;
         }
 
-        public int SearchForAvailableUnit(Booking bookingAttempt, IEnumerable<IReservation> registeredReservations)
+        public int SearchForAvailableUnit(Booking bookingAttempt, IEnumerable<Reservation> registeredReservations)
         {
             var availableUnits = this.GetUnitsToBook();
             var currentNight = 1;
@@ -27,7 +27,7 @@ namespace VacationRental.Core.Entities
             {
                 foreach (var reservation in registeredReservations)
                 {
-                    if (bookingAttempt.ConflictsWith(reservation))
+                    if (reservation.ConflictsWith(bookingAttempt))
                         availableUnits.Remove(reservation.Unit);
                 }
                 currentNight++;
@@ -36,9 +36,9 @@ namespace VacationRental.Core.Entities
             return availableUnits.Count;
         }
 
-        public List<IReservation> CalculatePreparationTimesFrom(Booking booking)
+        public List<Reservation> CalculatePreparationTimesFrom(Booking booking)
         {
-            var preparationTimes = new List<IReservation>();
+            var preparationTimes = new List<Reservation>();
             while(preparationTimes.Count < this.PreparationTimeInDays)
             {
                 var preparationTimeStartDate = booking.CheckOut;

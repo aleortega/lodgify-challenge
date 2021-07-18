@@ -13,7 +13,7 @@ namespace VacationRental.Core.ValueObjects
         public List<CalendarDate> BookingDates { get; set; }
         private DateTime _startDate { get; set; }
         private int _nights { get; set; }
-        private List<IReservation> _reservations { get; set; }
+        private List<Reservation> _reservations { get; set; }
 
         internal Calendar(Rental rental)
         {
@@ -33,7 +33,7 @@ namespace VacationRental.Core.ValueObjects
             return this;
         }
 
-        public ICalendarBuilder With(IEnumerable<IReservation> reservations)
+        public ICalendarBuilder With(IEnumerable<Reservation> reservations)
         {
             this._reservations = reservations.ToList();
             return this;
@@ -68,21 +68,21 @@ namespace VacationRental.Core.ValueObjects
         public DateTime Date { get; set; }
         public List<CalendarBooking> Bookings { get; set; }
         public List<CalendarPreparationTime> PreparationTimes { get; set; }
-        private Dictionary<ReservationType, Action<IReservation>> _reservationAdder { get; }
+        private Dictionary<ReservationType, Action<Reservation>> _reservationAdder { get; }
 
         public CalendarDate(DateTime date)
         {
             this.Date = date;
             this.Bookings = new List<CalendarBooking>();
             this.PreparationTimes = new List<CalendarPreparationTime>();
-            this._reservationAdder = new Dictionary<ReservationType, Action<IReservation>>()
+            this._reservationAdder = new Dictionary<ReservationType, Action<Reservation>>()
             {
-                { ReservationType.Booking, (IReservation reservation) => this.Bookings.Add(new CalendarBooking(reservation.Id, reservation.Unit)) },
-                { ReservationType.PreparationTime, (IReservation reservation) => this.PreparationTimes.Add(new CalendarPreparationTime(reservation.Unit)) }
+                { ReservationType.Booking, (Reservation reservation) => this.Bookings.Add(new CalendarBooking(reservation.Id, reservation.Unit)) },
+                { ReservationType.PreparationTime, (Reservation reservation) => this.PreparationTimes.Add(new CalendarPreparationTime(reservation.Unit)) }
             };
         }
 
-        public void AddReservation(IReservation reservation)
+        public void AddReservation(Reservation reservation)
         {
             this._reservationAdder[reservation.Type](reservation);
         }

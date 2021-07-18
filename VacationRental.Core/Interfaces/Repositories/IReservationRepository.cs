@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using VacationRental.Core.Entities;
 
 namespace VacationRental.Core.Interfaces.Repositories
 {
     public interface IReservationRepository
     {
-        Task<IReservation> GetAsync(int id);
-        Task<IEnumerable<IReservation>> ListBookingsFromRental(int rentalId);
-        Task<int> SaveAsync(IReservation reservation);
-        Task SaveAsync(List<IReservation> reservations);
+        Task<Reservation> GetAsync(int id);
+        Task<IEnumerable<Reservation>> ListBookingsFromRental(int rentalId);
+        Task<int> SaveAsync(Reservation reservation);
+        Task SaveAsync(List<Reservation> reservations);
     }
 }

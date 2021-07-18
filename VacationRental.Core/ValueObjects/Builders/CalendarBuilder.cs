@@ -25,7 +25,7 @@ namespace VacationRental.Core.ValueObjects.Builders
 
     public interface ICalendarPopulator
     {
-        ICalendarBuilder With(IEnumerable<IReservation> reservation);
+        ICalendarBuilder With(IEnumerable<Reservation> reservation);
     }
 
     public interface ICalendarBuilder
