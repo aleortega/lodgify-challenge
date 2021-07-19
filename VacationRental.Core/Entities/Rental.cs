@@ -7,9 +7,40 @@ namespace VacationRental.Core.Entities
     public class Rental
     {
         public int Id { get; set; }
-        public int Units { get; set; }
-        public int PreparationTimeInDays { get; set; }
+        public int Units 
+        {
+            get => _units;
+            set
+            {
+                if (value < 1)
+                    throw new ApplicationException("It is not possible to create a Rental with non positive units value");
+                _units = value;
+            }
+        }
+        private int _units;
+        public int? PreparationTimeInDays
+        {
+            get => _preparationTimeInDays;
+            set
+            {
+                if (value < 0 && value != null)
+                    throw new ApplicationException("It is not possible to create a Rental with negative preparation time in days value");
+                _preparationTimeInDays = value;
+            }
+        }
+        private int? _preparationTimeInDays;
         private IEnumerable<Reservation> _priorReservations;
+
+        public Rental(int units, int? preparationTimeInDays)
+        {
+            this.Units = units;
+            this.PreparationTimeInDays = preparationTimeInDays;
+        }
+
+        public Rental(int units)
+        {
+            this.Units = units;
+        }
 
         public Rental LoadPriorReservations(IEnumerable<Reservation> priorReservations)
         {

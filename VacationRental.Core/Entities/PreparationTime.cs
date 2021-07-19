@@ -1,5 +1,4 @@
 ﻿using System;
-using VacationRental.Core.Interfaces;
 
 namespace VacationRental.Core.Entities
 {
