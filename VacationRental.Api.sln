@@ -7,6 +7,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Api", "Vacat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Api.Tests", "VacationRental.Api.Tests\VacationRental.Api.Tests.csproj", "{57FE6E13-7144-459F-BCA8-431087D3DAEE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Persistance.InMemory", "VacationRental.Persistance.InMemory\VacationRental.Persistance.InMemory.csproj", "{5877A3BE-7907-42FC-B38C-75CF3AB2ACC3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Core", "VacationRental.Core\VacationRental.Core.csproj", "{FEA662EE-E8F1-4B9C-AEE3-C8B7A04BF70D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Application", "VacationRental.Application\VacationRental.Application.csproj", "{7FD50986-C8D9-41CB-A8A0-1D62C0DCA3F9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7BAF3725-1C21-4FA7-A4F1-FE8723C62D6C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacationRental.Core.Tests", "VacationRental.Core.Tests\VacationRental.Core.Tests.csproj", "{97F02560-28D5-4F32-A628-4F165E9397DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VacationRental.Application.Tests", "VacationRental.Application.Tests\VacationRental.Application.Tests.csproj", "{CB0036A4-77A4-434E-B12B-52F948E1F20B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +33,34 @@ Global
 		{57FE6E13-7144-459F-BCA8-431087D3DAEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57FE6E13-7144-459F-BCA8-431087D3DAEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57FE6E13-7144-459F-BCA8-431087D3DAEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5877A3BE-7907-42FC-B38C-75CF3AB2ACC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5877A3BE-7907-42FC-B38C-75CF3AB2ACC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5877A3BE-7907-42FC-B38C-75CF3AB2ACC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5877A3BE-7907-42FC-B38C-75CF3AB2ACC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEA662EE-E8F1-4B9C-AEE3-C8B7A04BF70D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA662EE-E8F1-4B9C-AEE3-C8B7A04BF70D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA662EE-E8F1-4B9C-AEE3-C8B7A04BF70D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA662EE-E8F1-4B9C-AEE3-C8B7A04BF70D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FD50986-C8D9-41CB-A8A0-1D62C0DCA3F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FD50986-C8D9-41CB-A8A0-1D62C0DCA3F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FD50986-C8D9-41CB-A8A0-1D62C0DCA3F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FD50986-C8D9-41CB-A8A0-1D62C0DCA3F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97F02560-28D5-4F32-A628-4F165E9397DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97F02560-28D5-4F32-A628-4F165E9397DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97F02560-28D5-4F32-A628-4F165E9397DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97F02560-28D5-4F32-A628-4F165E9397DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB0036A4-77A4-434E-B12B-52F948E1F20B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB0036A4-77A4-434E-B12B-52F948E1F20B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB0036A4-77A4-434E-B12B-52F948E1F20B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB0036A4-77A4-434E-B12B-52F948E1F20B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{57FE6E13-7144-459F-BCA8-431087D3DAEE} = {7BAF3725-1C21-4FA7-A4F1-FE8723C62D6C}
+		{97F02560-28D5-4F32-A628-4F165E9397DF} = {7BAF3725-1C21-4FA7-A4F1-FE8723C62D6C}
+		{CB0036A4-77A4-434E-B12B-52F948E1F20B} = {7BAF3725-1C21-4FA7-A4F1-FE8723C62D6C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6A5319C5-4F21-41BF-B8A7-BC45868FEC89}
